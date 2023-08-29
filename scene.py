@@ -192,6 +192,9 @@ class Scene:
             ax.vlines(x=r_index, ymin=0, ymax=max(self.signal), colors='blue', lw=5, alpha=0.2,
                       label="ближайший правый оп.")
 
+    def fill_from_array_by_nearest_principle(self, coords_arr):
+
+
 if __name__ == '__main__':
     signal = get_mini_ECG()
 

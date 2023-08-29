@@ -1,5 +1,6 @@
 from eval_r import REval
 from utils import HtmlLogger, StartSituationsGen, StartSituation, draw_ECG, draw_vertical_line
+from scene import Scene
 
 import matplotlib.pyplot as plt
 
@@ -10,8 +11,7 @@ def get_data():
 
 def make_exp_for_scene(fixed_points, filled_scene, log):
     fig, ax = plt.subplots()
-    draw_ECG(ax, signal)
-    draw_vertical_line(ax, x=start_point, y=max(signal), label="start_point")
+    filled_scene.draw(ax)
     log.add_fig(fig)
 
     r_eval = REval(fixed_coords=fixed_points, filled_scene_to_eval=filled_scene)
@@ -28,8 +28,12 @@ if __name__ == '__main__':
     fixed_points = [start_point]
 
     best_real_points = [15, 5, 37, 39]
-    make_exp_for_scene(fixed_points, filled_scene, log)
+    best_scene = Scene(signal)
+    best_scene.fill_from_array_by_nearest_principle(fixed_points+best_real_points)
+    make_exp_for_scene(fixed_points, best_scene, log)
 
     bad_real_points = [60, 70, 80, 90]
-    make_exp_for_scene(fixed_points, filled_scene, log)
+    bad_scene = Scene(signal)
+    bad_scene.fill_from_array_by_nearest_principle(fixed_points + bad_real_points)
+    make_exp_for_scene(fixed_points, bad_scene, log)
 

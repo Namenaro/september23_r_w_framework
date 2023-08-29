@@ -1,9 +1,9 @@
 from scene import Scene
 from utils import Distr
 
-
+import random
 # Есть некий сигнал. К нему даны n фиксированных точкек.
-# Нужно составит ьраспределение интерполяционного качества для m точек, из которых
+# Нужно составить распределение интерполяционного качества для m точек, из которых
 # n уже поставлены. Все m точек в интерполяторе по сигналу соединяются по приниципу ближайших соседей справа и слева.
 
 
@@ -25,17 +25,20 @@ class REval:
         N=200
         rs_sample = []
         for _ in range(N):
-            random_points =
+            random_points = random.sample(range(0, len(self.signal)), self.num_coords_real)
             r = self._get_r(random_points)
-            rs_sample.append((r))
+            rs_sample.append(r)
         r_distr = Distr(rs_sample)
         return r_distr
 
     def get_R(self):
-        R = self.r_distr.p_event_more_eq_than_val(self.real_r)
+        R = self.r_distr.get_p_of_event(self.real_r, self.real_r.get_mean())
         return R
 
     def _get_r(self, points):
-        # сортируем токчки, теперь у каждой (кроме конечных есть ближайший сосед слева и справа)
-        scene = Scene()
+        scene = Scene(self.signal)
+        scene.fill_from_array_by_nearest_principle(points + self.fixed_coords)
+        r = scene.get_err_sum()
+        return r
+
 
