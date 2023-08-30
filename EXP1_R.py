@@ -16,8 +16,8 @@ def make_exp_for_scene(fixed_points, filled_scene, log):
 
     r_eval = REval(fixed_coords=fixed_points, filled_scene_to_eval=filled_scene)
     R = r_eval.get_R()
-    log.add_text("R = " + R)
-    print ("R= " + R)
+    log.add_text("R = " + str(R))
+    print ("R= " + str(R))
 
 
 
@@ -27,7 +27,7 @@ if __name__ == '__main__':
     log = HtmlLogger("R_LOG")
     fixed_points = [start_point]
 
-    best_real_points = [15, 5, 37, 39]
+    best_real_points = [14, 5, 37, 39]
     best_scene = Scene(signal)
     best_scene.fill_from_array_by_nearest_principle(fixed_points+best_real_points)
     make_exp_for_scene(fixed_points, best_scene, log)

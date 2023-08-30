@@ -2,6 +2,15 @@ from scene import Scene
 from utils import Distr
 
 import random
+
+######## СУТЬ:
+# R это безразмерная универсальная величина, опирающяяся только на вероятности и
+# оценивающая ценность породженного описания (не с точки зрения агента а по факту -
+# это обратная связь от реальности). Служит для обратного обучающего сигнала: если
+# агент уверен, что порождает описание с хорошим стродством, а R оказывается низка,
+# то функцию замера сродства стоит дообучить.
+
+######## ТЕХНИЧЕСКИЕ ДЕТАЛИ:
 # Есть некий сигнал. К нему даны n фиксированных точкек.
 # Нужно составить распределение интерполяционного качества для m точек, из которых
 # n уже поставлены. Все m точек в интерполяторе по сигналу соединяются по приниципу ближайших соседей справа и слева.
@@ -15,7 +24,7 @@ class REval:
     def __init__(self, fixed_coords, filled_scene_to_eval):
         self.signal = filled_scene_to_eval.signal
         self.fixed_coords = fixed_coords
-        self.num_coords_real = filled_scene_to_eval.num_points()
+        self.num_coords_real = filled_scene_to_eval.get_num_of_points()
         self.real_r = filled_scene_to_eval.get_err_sum()
 
         self.r_distr = self._get_r_distr()
@@ -32,7 +41,7 @@ class REval:
         return r_distr
 
     def get_R(self):
-        R = self.r_distr.get_p_of_event(self.real_r, self.real_r.get_mean())
+        R = self.r_distr.get_p_of_event(self.real_r, self.r_distr.get_mean())
         return R
 
     def _get_r(self, points):

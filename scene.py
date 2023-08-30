@@ -110,6 +110,16 @@ class Scene:
         name_of_nearest = self.indexes_to_names[nearest_index]
         return self.names_to_points[name_of_nearest]
 
+    def get_left_nearest_point_name(self, index):
+        non_empty_indexes = self.indexes_to_names.keys()
+        left_indexes = list([other_index for other_index in non_empty_indexes if other_index<index])
+        if len(left_indexes) == 0:
+            return None
+        sorted_left_non_empy_indexes = sorted(left_indexes, reverse=True) #по убыванию
+        nearest_index = sorted_left_non_empy_indexes[0]
+        name_of_nearest = self.indexes_to_names[nearest_index]
+        return name_of_nearest
+
     def get_right_nearest_point(self, index):
         non_empty_indexes = self.indexes_to_names.keys()
         right_indexes = list([other_index for other_index in non_empty_indexes if other_index > index])
@@ -119,6 +129,16 @@ class Scene:
         nearest_index = sorted_right_non_empy_indexes[0]
         name_of_nearest = self.indexes_to_names[nearest_index]
         return self.names_to_points[name_of_nearest]
+
+    def get_right_nearest_point_name(self, index):
+        non_empty_indexes = self.indexes_to_names.keys()
+        right_indexes = list([other_index for other_index in non_empty_indexes if other_index > index])
+        if len(right_indexes) == 0:
+            return None
+        sorted_right_non_empy_indexes = sorted(right_indexes)  # по возрастанию
+        nearest_index = sorted_right_non_empy_indexes[0]
+        name_of_nearest = self.indexes_to_names[nearest_index]
+        return name_of_nearest
 
     def get_all_extemums_of_signal(self):
         finder = ExtremumFinder(self.signal)
@@ -193,6 +213,20 @@ class Scene:
                       label="ближайший правый оп.")
 
     def fill_from_array_by_nearest_principle(self, coords_arr):
+        names = []
+        for coord in coords_arr:
+            name = self.add_point(coord)
+            names.append(name)
+
+        for i in range(len(names)):
+            name = names[i]
+            coord = coords_arr[i]
+            left_point_name = self.get_left_nearest_point_name(coord)
+            if left_point_name is not None:
+                self.add_parent(name, left_point_name)
+            right_point_name = self.get_right_nearest_point_name(coord)
+            if right_point_name is not None:
+                self.add_parent(name, right_point_name)
 
 
 if __name__ == '__main__':

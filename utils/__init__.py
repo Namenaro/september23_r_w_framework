@@ -8,3 +8,4 @@ from .distr import Distr, get_distr_of_min_statistics, get_distr_of_max_statisti
 from .pareto2d import Pareto2d, Slayter2d
 from .mix_list import mix_list
 from .situations_gen import StartSituationsGen, StartSituation
+from .points_cloud import PointsCloud
