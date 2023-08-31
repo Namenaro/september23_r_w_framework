@@ -14,7 +14,7 @@ def make_exp_for_scene(fixed_points, filled_scene, log):
     filled_scene.draw(ax)
     log.add_fig(fig)
 
-    r_eval = REval(fixed_coords=fixed_points, filled_scene_to_eval=filled_scene)
+    r_eval = REval(fixed_coords=fixed_points, filled_scene_to_eval=filled_scene, allowed_left=0, allowed_right=filled_scene.get_size())
     R = r_eval.get_R()
     log.add_text("R = " + str(R))
     print ("R= " + str(R))

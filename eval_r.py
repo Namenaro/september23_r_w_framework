@@ -21,11 +21,14 @@ import random
 
 
 class REval:
-    def __init__(self, fixed_coords, filled_scene_to_eval):
+    def __init__(self, fixed_coords, filled_scene_to_eval, allowed_left, allowed_right):
         self.signal = filled_scene_to_eval.signal
         self.fixed_coords = fixed_coords
-        self.num_coords_real = filled_scene_to_eval.get_num_of_points()
+        self.num_coords_real = filled_scene_to_eval.get_num_of_points() - len(fixed_coords)
         self.real_r = filled_scene_to_eval.get_err_sum()
+
+        self.allowed_left = allowed_left
+        self.allowed_right = allowed_right
 
         self.r_distr = self._get_r_distr()
 
@@ -34,7 +37,7 @@ class REval:
         N=200
         rs_sample = []
         for _ in range(N):
-            random_points = random.sample(range(0, len(self.signal)), self.num_coords_real)
+            random_points = random.sample(range(self.allowed_left, self.allowed_right), self.num_coords_real)
             r = self._get_r(random_points)
             rs_sample.append(r)
         r_distr = Distr(rs_sample)
