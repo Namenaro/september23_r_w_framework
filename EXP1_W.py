@@ -17,6 +17,7 @@ def make_exp_for_prediction(u_predicted, log):
 
 
     v_predicted = signal[u_predicted]
+    print("v_pred = " + str(v_predicted))
 
     # перебираем все экстремумы сигнала на сцене, и для каждого меряем u_w, v_w, w
     scene = Scene(signal)
@@ -63,11 +64,9 @@ def make_exp_for_prediction(u_predicted, log):
     plt.legend()
     log.add_fig(fig)
 
+
 if __name__ == '__main__':
-
-
     log = HtmlLogger("W_LOG_with_parent")
-
     make_exp_for_prediction(u_predicted=14, log=log)
 
     log.add_text("Среднее предсказание")
@@ -75,5 +74,10 @@ if __name__ == '__main__':
 
     log.add_text("Плохое предсказание")
     make_exp_for_prediction(u_predicted=80, log=log)
+
+
+
+
+
 
 
