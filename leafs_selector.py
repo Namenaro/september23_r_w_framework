@@ -7,6 +7,7 @@ import matplotlib.pyplot as plt
 from random import randrange
 from copy import deepcopy
 
+
 def get_data():
     start_situation = StartSituationsGen().__next__()
     return start_situation.signal, start_situation.start_point
@@ -20,14 +21,13 @@ class EvaluatedLeafs:
         self.Rs = Rs
 
     def _get_top_by_w(self, m):
-        if m <= len(self.ws):
+        if m < len(self.ws):
             best_w_indexes = sorted(range(len(self.ws)), key=lambda i: self.ws[i], reverse=True)[:m] # от больших к меньшим
             return best_w_indexes
         return sorted(range(len(self.ws)), key=lambda i: self.ws[i], reverse=True)
 
 
-
-    def get_winners(self,num_winners, num_preselected_by_w):
+    def get_winners_by_w_and_err(self,num_winners, num_preselected_by_w):
         best_w_indexes = self._get_top_by_w(num_preselected_by_w)
         new_errs, new_ws, new_coords = self._subselect_by_index_list(best_w_indexes)
         best_by_err_indexes = sorted(range(len(new_errs)), key=lambda i: new_errs[i])[:num_winners]   # от меньших к большим, т.к. ошибку хотим маленькую
@@ -36,6 +36,12 @@ class EvaluatedLeafs:
         top_ws = list([new_ws[i] for i in best_by_err_indexes])
         top_errs = list([new_errs[i] for i in best_by_err_indexes])
         return top_coords, top_ws, top_errs
+
+    def get_winners_by_w(self, num_winners):
+        best_w_indexes = self._get_top_by_w(num_winners)
+        top_errs, top_ws, top_coords = self._subselect_by_index_list(best_w_indexes)
+        return top_coords, top_ws, top_errs
+
 
 
     def _subselect_by_index_list(self, indexes_list):

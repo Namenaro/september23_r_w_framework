@@ -1,6 +1,7 @@
 from scene import Scene
 from utils import IdGenedator
 
+
 class Resctiction:
     def __init__(self,  left_name=None, right_name =None):
         self.left_name = left_name
@@ -39,6 +40,9 @@ class Program:
         self.name_to_resctriction[name] = None
         self.name_to_u[name] = None
 
+        self.recogn_order.append(name)
+        return name
+
     def add_node(self, v, parent_name, u, restriction):
         name = self.idgen.get_id()
         self.name_to_parent_name[name] = parent_name
@@ -46,8 +50,19 @@ class Program:
         self.name_to_resctriction[name] = restriction
         self.name_to_u[name] = u
 
+        self.recogn_order.append(name)
+        return name
+
     def __len__(self):
         return len(self.recogn_order)
+
+    def print(self):
+        for name in self.recogn_order:
+            print(str(name) + " : parent_name= " + str(self.name_to_parent_name[name])
+                  + "  u= " + str(self.name_to_u[name])
+                                  + "  v= " + str(self.name_to_val[name]))
+
+
 
     def get_prediction_for_name(self, scene, name):
         parent_name = self.name_to_parent_name[name]
@@ -57,3 +72,9 @@ class Program:
         u_from_parent = self.name_to_u[name]
         u_in_scene = parent_coord_in_scene + u_from_parent
         return left_coord, right_coord, v, u_in_scene, parent_coord_in_scene, parent_name
+
+    def get_ith_name(self, i_in_order):
+        return self.recogn_order[i_in_order]
+
+    def get_v(self, name):
+        return self.name_to_val[name]

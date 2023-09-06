@@ -47,7 +47,7 @@ class REval:
         R = self.r_distr.get_p_of_event(self.real_r, self.r_distr.get_mean())
         return R
 
-    def _get_r(self, points):
+    def _get_r(self, points): # TODO сцена здесь не перемешана, а взаята как есть
         scene = Scene(self.signal)
         scene.fill_from_array_by_nearest_principle(points + self.fixed_coords)
         r = scene.get_err_sum()

@@ -229,6 +229,7 @@ class Scene:
                 self.add_parent(name, right_point_name)
 
 
+
 if __name__ == '__main__':
     signal = get_mini_ECG()
 
