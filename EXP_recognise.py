@@ -28,7 +28,7 @@ def get_program():
 
     coord4 = 5
     v4 = signal[coord4]
-    u4=coord4-coord2
+    u4 = coord4-coord2
     restriction4 = Resctiction(right_name=name2)
     name5 = program.add_node(v=v4, u=u4, parent_name=name2, restriction=restriction4)
 

@@ -31,7 +31,7 @@ class LateralInhibitionSystem:
         self.rostocs = [i for j, i in enumerate(self.rostocs) if j not in indexes_to_remove]
 
 
-def decise(coords1, coords2, ws1 , ws2, threshold=0.8):
+def decise(coords1, coords2, ws1 , ws2, threshold=0.8): #TODO возможно, при обранужении необходимости торможения, надо вибирать победителя по w всего ростка, а не листьев
 
     need_delete_1 = False
     need_delete_2 = False
