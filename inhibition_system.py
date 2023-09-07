@@ -7,7 +7,7 @@ class LateralInhibitionSystem:
 
 
     def run_inhibition(self, procent=0.8):
-        indexes_to_remove = []
+        indexes_to_remove = set()
         # будем сравнивать каждй росток с каждым, кроме себя самого
         num_rostocs = len(self.rostocs)
         for i in range(num_rostocs):
@@ -21,19 +21,17 @@ class LateralInhibitionSystem:
                 coords2 = rostoc2.get_lefs_coords()
                 ws2 = rostoc2.get_leafs_ws()
 
-                need_delete_1, need_delete_2 = decise(coords1, coords2, ws1 , ws2)
+                need_delete_1, need_delete_2 = decise(coords1, coords2, ws1 , ws2, procent)
                 if need_delete_1:
-                    indexes_to_remove.append(i)
+                    indexes_to_remove.add(i)
                 if need_delete_2:
-                    indexes_to_remove.append(j)
-
-        for i in indexes_to_remove:
-            del self.rostocs[i]
+                    indexes_to_remove.add(j)
 
 
+        self.rostocs = [i for j, i in enumerate(self.rostocs) if j not in indexes_to_remove]
 
-def decise(coords1, coords2, ws1 , ws2):
-    threshold = 0.8
+
+def decise(coords1, coords2, ws1 , ws2, threshold=0.8):
 
     need_delete_1 = False
     need_delete_2 = False

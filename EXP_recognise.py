@@ -16,15 +16,21 @@ def get_program():
 
     coord2 = 14
     v2 = signal[coord2]
-    u2 = coord2 -situation.start_point
+    u2 = coord2 - situation.start_point
     restriction2 = Resctiction(left_name=None, right_name=name1)
     name2 = program.add_node(v=v2, u=u2, parent_name=name1, restriction=restriction2)
 
-    coord3 = 5
+    coord3 = 37
     v3 = signal[coord3]
-    u3=coord3-coord2
-    restriction3 = Resctiction(right_name=name2)
-    name3 = program.add_node(v=v3, u=u3, parent_name=name2, restriction=restriction3)
+    u3 = coord3 - situation.start_point
+    restriction3 = Resctiction(left_name=name1, right_name=None)
+    name3 = program.add_node(v=v3, u=u3, parent_name=name1, restriction=restriction3)
+
+    coord4 = 5
+    v4 = signal[coord4]
+    u4=coord4-coord2
+    restriction4 = Resctiction(right_name=name2)
+    name5 = program.add_node(v=v4, u=u4, parent_name=name2, restriction=restriction4)
 
     return program
 

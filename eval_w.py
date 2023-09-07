@@ -43,10 +43,14 @@ class WEval:
         return w_v + w_u
 
     def get_w_u(self):
+        if self.u_err == 0:
+            return 1*self.u_weight
         w_u = 1 - (self.u_err/ (self.u_err + self.u_range))
         return w_u*self.u_weight
 
     def get_w_v(self):
+        if self.v_err == 0:
+            return 1 * self.v_weight
         w_v = 1 - (self.v_err / (self.v_err + self.v_range))
         return w_v*self.v_weight
 

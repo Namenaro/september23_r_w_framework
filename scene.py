@@ -2,6 +2,7 @@ from utils import IdGenedator, get_mini_ECG, draw_ECG, InterpolationSegment, Ext
 
 import matplotlib.pyplot as plt
 from matplotlib.pyplot import text
+import  statistics
 
 class Point:
     def __init__(self, coord):
@@ -19,6 +20,7 @@ class Point:
 class Scene:
     def __init__(self, signal):
         self.signal = signal
+        self.mean = statistics.mean(signal)
         self.names_to_points = {}
         self.indexes_to_names = {}
 
@@ -26,7 +28,7 @@ class Scene:
 
         self.coords_to_predictions = {}  # над любой точкой сцены самое новое предсказание (хронологичски добавленное)
         for coord in range(len(self.signal)):
-            self.coords_to_predictions[coord] = 0
+            self.coords_to_predictions[coord] = 0 #self.mean
 
         self.coords_of_extrms = self.get_all_extemums_of_signal()
 
@@ -76,6 +78,58 @@ class Scene:
             val = vals[i]
 
             self.coords_to_predictions[coord] = val
+
+        #self._recalc_prediction_btw_segments() # TODO без этого на ненакрытых интерполяцией будет ноль
+
+    def _recalc_prediction_btw_segments(self): # TODO это можно сделать разными способами. Можно написать тут pass
+        # перебираем точки начиная с самой левой
+        # для текущей точки берем ближайшую справа
+        # проверяем состоит ли эта пара в отношениях родитель ребенок
+        # если нет, то на сегменте между ними считаем среднее и перезаписываем предсказание всем точкам на сегменте
+
+        points_coords = self.get_points_coords()
+        soted_coords_from_left = sorted(points_coords) #по возрастанию
+        for i in range(len(soted_coords_from_left)-1):
+            left_point = soted_coords_from_left[i]
+            right_point = soted_coords_from_left[i+1]
+            poin_name1 = self.get_name_by_index(left_point)
+            point_name2 = self.get_name_by_index(right_point)
+            if self._are_point_linked_into_segment(point_name2, poin_name1):
+                continue
+            if right_point - left_point == 1:
+                continue
+            mean = self.get_mean_in_area_include_borders(point_left=left_point+1, point_right=right_point-1)
+            for coord in range(left_point+1, right_point):
+                self.coords_to_predictions[coord] = mean
+
+        # тдельно обрабатываем сегмент левее самой левой и правее самой правой
+        if soted_coords_from_left[0]!=0:
+            mean = self.get_mean_in_area_include_borders(point_left=0, point_right=soted_coords_from_left[0]-1)
+            for coord in range(0, soted_coords_from_left[0]):
+                self.coords_to_predictions[coord] = mean
+
+        if soted_coords_from_left[-1]!=len(self.signal):
+            mean = self.get_mean_in_area_include_borders(point_left=soted_coords_from_left[-1]+1, point_right=len(self.signal)-1)
+            for coord in range(soted_coords_from_left[-1]+1, len(self.signal)):
+                self.coords_to_predictions[coord] = mean
+
+    def get_mean_in_area_include_borders(self, point_left, point_right):
+        sum = 0
+        for coord in range(point_left, point_right+1):
+            sum += self.signal[coord]
+        n = point_right - point_left + 1
+        mean = sum/n
+        return mean
+
+    def _are_point_linked_into_segment(self, point_name1, point_name2):
+        parents_of_1 = self.names_to_points[point_name1].parents_names
+        if point_name2 in parents_of_1:
+            return True
+        parents_of_2 = self.names_to_points[point_name2].parents_names
+        if point_name1 in parents_of_2:
+            return True
+        return False
+
 
     def get_prediction(self):
         pointwise_prediction = []

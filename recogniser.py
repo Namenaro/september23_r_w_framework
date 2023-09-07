@@ -12,9 +12,9 @@ class Recogniser:
         self.program = program
         self.signal = signal
 
-        self.NUM_CHILDREN_of_rostoc = 2
-        self.NUM_ROSTOCS = 1
-        self.NUM_INITIAL_ROSCTOCS = 3
+        self.NUM_CHILDREN_of_rostoc = 5
+        self.NUM_ROSTOCS = 4
+        self.NUM_INITIAL_ROSCTOCS = 1
 
         self.current_recog_step_num = 0
 
@@ -38,6 +38,7 @@ class Recogniser:
 
         # производим торможение родительских ростков по похежести генерируемых ими листьев
         inhibition.run_inhibition(procent=0.8)
+
 
         #генерируем ростков-детей для выживших после торможения ростков-родителей
         all_cildren_rostocs = []
@@ -69,7 +70,7 @@ class Recogniser:
             w = w_evaluator.get_W()
             scene = Scene(self.signal)
             scene.add_point(coord, name)
-            rostoc = Rostoc(scene, w, self.program)
+            rostoc = Rostoc(scene, w, self.program, r=0)
             self.ROSTOCS.append(rostoc)
 
     def get_num_rostocs(self):

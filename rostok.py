@@ -6,8 +6,9 @@ from eval_r import REval
 from copy import deepcopy
 
 class Rostoc:
-    def __init__(self, scene, w, program):
+    def __init__(self, scene, w, program, r):
         self.w = w
+        self.r = r
         self.scene = scene
         self.program = program
 
@@ -49,7 +50,7 @@ class Rostoc:
         child_scene = deepcopy(self.scene)
         child_scene.add_point(leaf_coord, name)
         child_scene.add_parent(child_name=name, parent_name=self.parent_name)
-        rostoc = Rostoc(scene=child_scene, w=self.w + leaf_w, program=self.program)
+        rostoc = Rostoc(scene=child_scene, w=self.w + leaf_w, program=self.program, r=0)
         return rostoc
 
     def get_w(self):
@@ -65,8 +66,11 @@ class Rostoc:
     def get_leafs_ws(self):
         return self.leafs_ws
 
-    def get_R(self): # TODO можно не по всему сигналу, можно с фиксорованными (тогда росток хранит свой R, и на каждом шаге кнему прибавляется R_наращивания, которое считается по собственному бассейну)
+    def get_R(self): # по всему сигналу, не учитывая условия перед добавлением каждой точки
         # считаем, что фиксированных нет, а интерполяция по всему сигналу
         eval = REval(fixed_coords=[], filled_scene_to_eval=self.scene, allowed_left=0, allowed_right=len(self.scene.signal)-1)
         R= eval.get_R()
         return R
+
+    def get_r(self):
+        return self.r
