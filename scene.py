@@ -103,12 +103,12 @@ class Scene:
                 self.coords_to_predictions[coord] = mean
 
         # тдельно обрабатываем сегмент левее самой левой и правее самой правой
-        if soted_coords_from_left[0]!=0:
+        if soted_coords_from_left[0]>1:
             mean = self.get_mean_in_area_include_borders(point_left=0, point_right=soted_coords_from_left[0]-1)
             for coord in range(0, soted_coords_from_left[0]):
                 self.coords_to_predictions[coord] = mean
 
-        if soted_coords_from_left[-1]!=len(self.signal):
+        if soted_coords_from_left[-1]<len(self.signal)-1:
             mean = self.get_mean_in_area_include_borders(point_left=soted_coords_from_left[-1]+1, point_right=len(self.signal)-1)
             for coord in range(soted_coords_from_left[-1]+1, len(self.signal)):
                 self.coords_to_predictions[coord] = mean
@@ -199,6 +199,8 @@ class Scene:
         coords_of_extrms = finder.get_coords_extremums()
         return coords_of_extrms
 
+    def get_vs_in_interval(self, left_coord, right_coord):
+        return self.signal[left_coord: right_coord+1]
 
     def get_all_maxes_of_err(self):
         finder = ExtremumFinder(signal=self.get_error_pointwise())

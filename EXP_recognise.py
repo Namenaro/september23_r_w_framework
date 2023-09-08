@@ -35,7 +35,7 @@ def get_program():
     return program
 
 
-if __name__ == '__main__':
+def EXP_on_etalon():
     log = HtmlLogger("LOG_recogniser")
     sit_gen = StartSituationsGen()
     situation = sit_gen.__next__()
@@ -54,4 +54,31 @@ if __name__ == '__main__':
         print("ШАГ " + str(step_num) + " : кол-во ростков ->  " + str(recogniser.get_num_rostocs()))
         log.add_text("ШАГ " + str(step_num) + " : кол-во ростков ->  " + str(recogniser.get_num_rostocs()))
         recogniser.draw_rostocs(log)
-        step_num +=1
+        step_num += 1
+
+def EXP_not_etalon():
+    log = HtmlLogger("LOG_recogniser_NOET")
+    sit_gen = StartSituationsGen()
+    for _ in range(12):
+        sit_gen.__next__()
+
+    situation = sit_gen.__next__()
+    signal = situation.signal
+    program = get_program()
+    program.print()
+    recogniser = Recogniser(program, signal)
+    recogniser.draw_rostocs(log)
+
+    step_num = 1
+    while True:
+        success = recogniser.make_step()
+        if success is False:
+            break
+
+        print("ШАГ " + str(step_num) + " : кол-во ростков ->  " + str(recogniser.get_num_rostocs()))
+        log.add_text("ШАГ " + str(step_num) + " : кол-во ростков ->  " + str(recogniser.get_num_rostocs()))
+        recogniser.draw_rostocs(log)
+        step_num += 1
+
+if __name__ == '__main__':
+    EXP_not_etalon()
